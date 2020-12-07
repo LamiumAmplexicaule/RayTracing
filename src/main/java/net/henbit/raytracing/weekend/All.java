@@ -69,8 +69,8 @@ public class All
     {
         for (int i = 2; i < 14; i++)
         {
-            BufferedImage ppm = Utils.loadPPM(IMAGE_PATH + "image-chapter" + i + ".ppm");
-            ImageIO.write(ppm, "png", new File(IMAGE_PATH + "image-chapter" + i + ".png"));
+            BufferedImage ppm = Utils.loadPPM(IMAGE_PATH + "weekend-chapter" + i + ".ppm");
+            ImageIO.write(ppm, "png", new File(IMAGE_PATH + "weekend-chapter" + i + ".png"));
         }
     }
 
