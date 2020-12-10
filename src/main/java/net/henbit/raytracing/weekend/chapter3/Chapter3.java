@@ -6,6 +6,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 import static net.henbit.raytracing.weekend.RTWeekend.IMAGE_PATH;
 
@@ -31,15 +33,24 @@ public class Chapter3
         bufferedWriter.write(imageWidth + " " + imageHeight + System.lineSeparator());
         bufferedWriter.write("255" + System.lineSeparator());
 
-        for (int j = imageHeight - 1; j >= 0; --j)
+        Vector3[] pixelColors = new Vector3[imageWidth * imageHeight];
+        AtomicInteger count = new AtomicInteger(imageHeight);
+
+        IntStream.range(0, imageHeight).parallel().forEach(j ->
         {
-            System.err.println("ScanLines remaining: " + j + "");
+            System.err.println("ScanLines remaining: " + count.decrementAndGet() + "");
             for (int i = 0; i < imageWidth; ++i)
             {
                 Vector3 pixelColor = new Vector3((double) i / (imageWidth - 1), (double) j / (imageHeight - 1), 0.25);
-                Color.writeColor(bufferedWriter, pixelColor);
+                pixelColors[(imageHeight - j - 1) * imageWidth + i] = pixelColor;
             }
+        });
+
+        for (Vector3 pixelColor : pixelColors)
+        {
+            Color.writeColor(bufferedWriter, pixelColor);
         }
+
         bufferedWriter.close();
         System.err.println("Done");
     }

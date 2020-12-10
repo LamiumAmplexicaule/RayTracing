@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 import static net.henbit.raytracing.weekend.RTWeekend.IMAGE_PATH;
 
@@ -29,9 +31,12 @@ public class Chapter2
         bufferedWriter.write(imageWidth + " " + imageHeight + System.lineSeparator());
         bufferedWriter.write("255" + System.lineSeparator());
 
-        for (int j = imageHeight - 1; j >= 0; --j)
+        int[][] pixelColors = new int[3][imageWidth * imageHeight];
+        AtomicInteger count = new AtomicInteger(imageHeight);
+
+        IntStream.range(0, imageHeight).parallel().forEach(j ->
         {
-            System.err.println("ScanLines remaining: " + j + "");
+            System.err.println("ScanLines remaining: " + count.decrementAndGet() + "");
             for (int i = 0; i < imageWidth; ++i)
             {
                 double r = (double) i / (imageWidth - 1);
@@ -41,8 +46,16 @@ public class Chapter2
                 int ir = (int) (255.999 * r);
                 int ig = (int) (255.999 * g);
                 int ib = (int) (255.999 * b);
-                bufferedWriter.write(ir + " " + ig + " " + ib + System.lineSeparator());
+                final int k = (imageHeight - j - 1) * imageWidth + i;
+                pixelColors[0][k] = ir;
+                pixelColors[1][k] = ig;
+                pixelColors[2][k] = ib;
             }
+        });
+
+        for (int i = 0; i < pixelColors[0].length; ++i)
+        {
+            bufferedWriter.write(pixelColors[0][i] + " " + pixelColors[1][i] + " " + pixelColors[2][i] + System.lineSeparator());
         }
 
         bufferedWriter.close();
