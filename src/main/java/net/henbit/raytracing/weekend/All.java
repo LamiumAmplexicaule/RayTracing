@@ -1,5 +1,6 @@
 package net.henbit.raytracing.weekend;
 
+import net.henbit.raytracing.Utils;
 import net.henbit.raytracing.weekend.chapter10.Chapter10;
 import net.henbit.raytracing.weekend.chapter11.Chapter11;
 import net.henbit.raytracing.weekend.chapter12.Chapter12;

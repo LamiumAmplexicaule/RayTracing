@@ -1,4 +1,4 @@
-package net.henbit.raytracing.weekend;
+package net.henbit.raytracing;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
